@@ -1,0 +1,82 @@
+name: sample-cucumberjs-pnpm-esm-js
+
+env:
+  ALLURE_ENDPOINT: https://demo.qatools.cloud/
+  ENDPOINT: https://demo.qatools.cloud/
+  ALLURE_PROJECT_ID: 55
+  ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+  ALLURE_RESULTS: "./out/allure-results"
+  BROWSER: ${{ inputs.BROWSER || 'OperaGX' }}
+  OS: ${{ inputs.OS || 'Win_11' }}
+  BRANCH: ${{ github.ref_name }}
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      BROWSER:
+        description: Browser
+        required: false
+        default: "OperaGX"
+      OS:
+        description: OS
+        required: false
+        default: "Win_11"
+      ALLURE_JOB_RUN_ID:
+        description: "ALLURE_JOB_RUN_ID - service parameter (leave blank)"
+        required: false
+        default: ""
+      ALLURE_USERNAME:
+        description: "ALLURE_USERNAME - service parameter (leave blank)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  autotests:
+    name: Run tests and generate Allure Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Clone repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install pnpm
+        run: pnpm install
+
+    #  - run: pnpm test
+    #  continue-on-error: true
+
+      - name: Install allurectl
+        uses: allure-framework/setup-allurectl@v1
+        with:
+          allure-endpoint: ${{ env.ALLURE_ENDPOINT }}
+          allure-token: ${{ env.ALLURE_TOKEN }}
+          allure-project-id: ${{ env.ALLURE_PROJECT_ID }}
+
+      - name: Remove old directories
+        run: rm -rf allure-results .allure || true
+
+      - name: Run tests with Allure TestOps
+        run: allurectl watch -- npm test
+        continue-on-error: true

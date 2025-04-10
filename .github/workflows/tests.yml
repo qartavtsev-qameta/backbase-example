@@ -6,6 +6,7 @@ env:
   ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
   ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
   ALLURE_RESULTS: "./out/allure-results"
+  ALLURE_TESTPLAN_PATH: "./testplan.json"
 
 on:
   workflow_dispatch:
@@ -16,22 +17,6 @@ on:
       ALLURE_USERNAME:
         description: ALLURE_USERNAME - service parameter (leave blank)
         required: false
-      BROWSER:
-        required: true
-        default: Google Chrome
-      ENDPOINT: 
-        required: true
-        default: Demo
-      OS:
-        required: true
-        default: macOS    
-      VERSION:
-        required: true
-        default: '25.1.0'
-
-permissions:
-  contents: read
-  actions: write
 
 jobs:
   autotests:
@@ -73,10 +58,3 @@ jobs:
         run: allurectl watch -- npm test
         env:
           ALLURE_LAUNCH_NAME: "Test Run #${{ github.run_number }}"
-          ALLURE_RESULTS: "./out/allure-results"
-          ALLURE_TESTPLAN_PATH: "./testplan.json"
-          BRANCH: ${{ github.ref_name }}
-          BROWSER: ${{ inputs.BROWSER }}
-          ENDPOINT: ${{ inputs.ENDPOINT }}
-          OS: ${{ inputs.OS }}
-          VERSION: ${{ inputs.VERSION }}

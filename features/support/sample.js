@@ -3,40 +3,28 @@ import { step } from "allure-js-commons";
 
 // === GIVEN ===
 Given("the user is on the login page", async function () {
-  await step("Navigating to login page", async () => {
-    console.log("User opens login page");
+  console.log("User opens login page");
   });
-});
 
 Given("the user is logged in", async function () {
-  await step("Logging in the user", async () => {
-    console.log("User is logged in");
+  console.log("User is logged in");
   });
-});
 
 Given("the user enters an incorrect password 5 times", async function () {
-  await step("Simulating 5 failed login attempts", async () => {
-    console.log("User failed to login 5 times");
+  console.log("User failed to login 5 times");
   });
-});
 
 Given("the user is inactive for 30 minutes", async function () {
-  await step("User inactivity for 30 minutes", async () => {
-    console.log("User inactive for 30 minutes");
+  console.log("User inactive for 30 minutes");
   });
-});
 
 Given("the user has enabled two-factor authentication", async function () {
-  await step("User has 2FA enabled", async () => {
-    console.log("2FA enabled for user");
+  console.log("2FA enabled for user");
   });
-});
 
 Given("the user is not logged in", async function () {
-  await step("User is not authenticated", async () => {
-    console.log("User not logged in");
+  console.log("User not logged in");
   });
-});
 
 // === WHEN ===
 When("the user enters a valid username and password", async function () {

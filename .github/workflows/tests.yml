@@ -1,4 +1,4 @@
-name: example-javascript-cucumber-esm-pnpm
+name: javascript-cucumber-esm-pnpm
 
 env:
   ALLURE_ENDPOINT: https://demo.testops.cloud/
@@ -8,24 +8,26 @@ env:
   ALLURE_RESULTS: "./out/allure-results"
 
 on:
-  push:
-    branches:
-      - main
-  
-  pull_request:
-    branches:
-      - main
-  
   workflow_dispatch:
     inputs:
       ALLURE_JOB_RUN_ID:
-        description: "ALLURE_JOB_RUN_ID - service parameter (leave blank)"
+        description: ALLURE_JOB_RUN_ID - service parameter (leave blank)
         required: false
-        default: ""
       ALLURE_USERNAME:
-        description: "ALLURE_USERNAME - service parameter (leave blank)"
+        description: ALLURE_USERNAME - service parameter (leave blank)
         required: false
-        default: ""
+      BROWSER:
+        required: true
+        default: Google Chrome
+      ENDPOINT: 
+        required: true
+        default: Demo
+      OS:
+        required: true
+        default: macOS    
+      VERSION:
+        required: true
+        default: '25.1.0'
 
 permissions:
   contents: read
@@ -33,11 +35,11 @@ permissions:
 
 jobs:
   autotests:
-    name: Run tests and generate Allure Report
+    name: Run autotests
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup pnpm
+      - name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -51,22 +53,30 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Install pnpm
+      - name: Install PNPM
         run: pnpm install
 
-    #  - run: pnpm test
-    #  continue-on-error: true
+      - name: Get the latest allurectl
+        run: |
+          latest_version=$(curl -s https://api.github.com/repos/allure-framework/allurectl/releases/latest | jq -r .tag_name)
+          echo "ALLURECTL_VERSION=$latest_version" >> $GITHUB_ENV
 
       - name: Install allurectl
         uses: allure-framework/setup-allurectl@v1
         with:
-          allure-endpoint: ${{ env.ALLURE_ENDPOINT }}
-          allure-token: ${{ env.ALLURE_TOKEN }}
-          allure-project-id: ${{ env.ALLURE_PROJECT_ID }}
+          allure-endpoint: https://demo.testops.cloud/
+          allure-project-id: 4160
+          allure-token: ${{ secrets.ALLURE_TOKEN }}
+          allurectl-version: ${{ env.ALLURECTL_VERSION }}
 
-      - name: Remove old directories
-        run: rm -rf allure-results .allure || true
-
-      - name: Run tests with Allure TestOps
+      - name: Run autotests
         run: allurectl watch -- npm test
-        continue-on-error: true
+        env:
+          ALLURE_LAUNCH_NAME: "Test Run #${{ github.run_number }}"
+          ALLURE_RESULTS: "./out/allure-results"
+          ALLURE_TESTPLAN_PATH: "./testplan.json"
+          BRANCH: ${{ github.ref_name }}
+          BROWSER: ${{ inputs.BROWSER }}
+          ENDPOINT: ${{ inputs.ENDPOINT }}
+          OS: ${{ inputs.OS }}
+          VERSION: ${{ inputs.VERSION }}

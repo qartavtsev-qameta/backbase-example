@@ -14,9 +14,27 @@ Given("the user is logged in", async function () {
   });
 });
 
-Given("the session timeout duration has elapsed", async function () {
-  await step("Simulating session timeout", async () => {
-    console.log("Session has timed out");
+Given("the user enters an incorrect password 5 times", async function () {
+  await step("Simulating 5 failed login attempts", async () => {
+    console.log("User failed to login 5 times");
+  });
+});
+
+Given("the user is inactive for 30 minutes", async function () {
+  await step("User inactivity for 30 minutes", async () => {
+    console.log("User inactive for 30 minutes");
+  });
+});
+
+Given("the user has enabled two-factor authentication", async function () {
+  await step("User has 2FA enabled", async () => {
+    console.log("2FA enabled for user");
+  });
+});
+
+Given("the user is not logged in", async function () {
+  await step("User is not authenticated", async () => {
+    console.log("User not logged in");
   });
 });
 
@@ -25,83 +43,87 @@ When("the user enters a valid username and password", async function () {
   console.log("Entered valid credentials");
 });
 
-When("the user enters an invalid username or password", async function () {
-  console.log("Entered invalid credentials");
+When("the user enters a valid username and an incorrect password", async function () {
+  console.log("Entered valid username and wrong password");
 });
 
-When("the user clicks the Login button", async function () {
-  console.log("Clicked Login button");
+When("the user enters a non-existent username and any password", async function () {
+  console.log("Entered non-existent username");
 });
 
-When("the user clicks the Login button without entering a username or password", async function () {
-  console.log("Clicked Login without credentials");
+When("the user leaves the username and password fields blank", async function () {
+  console.log("Left fields blank");
 });
 
-When("the user enters a password in the password field", async function () {
-  console.log("Entered password");
+When("the user clicks the login button", async function () {
+  console.log("Clicked login button");
 });
 
-When("the user enters invalid credentials multiple times", async function () {
-  console.log("Failed login 5 times");
+When("the user attempts to log in again", async function () {
+  console.log("Attempted to log in again");
 });
 
-When("the user clicks the Logout button", async function () {
-  console.log("Clicked Logout");
+When("the user clicks the logout button", async function () {
+  console.log("Clicked logout button");
 });
 
-When("the user attempts to perform any action", async function () {
-  console.log("Tried to do something after session expired");
+When("the user tries to access the dashboard page", async function () {
+  console.log("Tried to access dashboard");
+});
+
+When("the user types a password", async function () {
+  console.log("User typing password");
+});
+
+When("the user tries to interact with the application", async function () {
+  console.log("User attempted to interact after inactivity");
+});
+
+When("the user logs in with valid username and password", async function () {
+  console.log("User logged in with valid credentials");
 });
 
 // === THEN ===
-Then("the user should be redirected to the dashboard page", async function () {
+Then("the user should be redirected to the dashboard", async function () {
   console.log("Redirected to dashboard");
 });
 
-Then("a success message should be displayed, saying Login successful", async function () {
-  console.log("Login successful message shown");
+Then("a session token should be created", async function () {
+  console.log("Session token created");
 });
 
-Then("an error message should be displayed, saying Invalid username or password", async function () {
-  console.log("Invalid credentials message shown");
+Then('the user should see an error message saying "Invalid credentials"', async function () {
+  console.log("Error message: Invalid credentials");
 });
 
 Then("the user should remain on the login page", async function () {
-  console.log("Still on login page");
+  console.log("User stays on login page");
 });
 
-Then("an error message should be displayed, saying Username and password cannot be blank", async function () {
-  console.log("Blank field error shown");
+Then("the user should see validation messages for both fields", async function () {
+  console.log("Validation messages shown for blank fields");
 });
 
-Then("the password should be masked", async function () {
-  console.log("Password is masked");
-});
-
-Then("the user should be able to toggle password visibility", async function () {
-  console.log("Toggle visibility works");
-});
-
-Then("the account should be locked", async function () {
-  console.log("Account is locked");
-});
-
-Then("a message should be displayed, saying Your account is locked. Please contact support", async function () {
+Then('the user should see a message saying "Your account has been locked"', async function () {
   console.log("Account locked message shown");
 });
 
 Then("the user should be redirected to the login page", async function () {
-  console.log("Redirected to login");
+  console.log("Redirected to login page");
 });
 
-Then("a message should be displayed, saying You have successfully logged out", async function () {
-  console.log("Logout message shown");
+Then("the session token should be invalidated", async function () {
+  console.log("Session token invalidated");
 });
 
-Then("the session should be terminated", async function () {
-  console.log("Session terminated");
+Then("the password field should display dots or asterisks instead of the actual characters", async function () {
+  console.log("Password is masked");
 });
 
-Then("a message should be displayed, saying Your session has expired. Please log in again", async function () {
-  console.log("Session expired message shown");
+Then('the user should be redirected to the login page with a message "Session expired"', async function () {
+  console.log("Redirected to login with session expired message");
+});
+
+Then("the user should be prompted to enter a 2FA code", async function () {
+  console.log("Prompted for 2FA code");
 });

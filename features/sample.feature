@@ -1,46 +1,59 @@
-Feature: Authentication
+Feature: User Authentication
 
-	Scenario: Scenario 1: Successful Login
- 		Given the user is on the login page
-   		When the user enters a valid username and password
-     		When the user clicks the Login button
-       		Then the user should be redirected to the dashboard page
-	 	Then a success message should be displayed, saying Login successful
+  Scenario: Successful login with valid credentials
+    Given the user is on the login page
+    When the user enters a valid username and password
+    When the user clicks the login button
+    Then the user should be redirected to the dashboard
+    Then a session token should be created
 
-	Scenario: Scenario 2: Login with Invalid Credentials
- 		Given the user is on the login page
-   		When the user enters an invalid username or password
-     		When the user clicks the Login button
-       		Then an error message should be displayed, saying Invalid username or password
-		Then the user should remain on the login page
+  Scenario: Login fails with an incorrect password
+    Given the user is on the login page
+    When the user enters a valid username and an incorrect password
+    When the user clicks the login button
+    Then the user should see an error message saying "Invalid credentials"
+    Then the user should remain on the login page
 
-	Scenario: Scenario 3: Login with Blank Fields
- 		Given the user is on the login page
-   		When the user clicks the Login button without entering a username or password
-     		Then an error message should be displayed, saying Username and password cannot be blank
+  Scenario: Login fails with a non-existent username
+    Given the user is on the login page
+    When the user enters a non-existent username and any password
+    When the user clicks the login button
+    Then the user should see an error message saying "Invalid credentials"
 
-	Scenario: Scenario 4: Password Masking
-		Given the user is on the login page
-  		When the user enters a password in the password field
-    		Then the password should be masked
-      		Then the user should be able to toggle password visibility
+  Scenario: Login fails with empty username and password
+    Given the user is on the login page
+    When the user leaves the username and password fields blank
+    When the user clicks the login button
+    Then the user should see validation messages for both fields
 
-	Scenario: Scenario 5: Account Lock after Multiple Failed Login Attempts
- 		Given the user is on the login page
-   		When the user enters invalid credentials multiple times
-     		Then the account should be locked
-       		Then a message should be displayed, saying Your account is locked. Please contact support
+  Scenario: Account is locked after multiple failed login attempts
+    Given the user enters an incorrect password 5 times
+    When the user attempts to log in again
+    Then the user should see a message saying "Your account has been locked"
 
-	Scenario: Scenario 6: Logout Functionality
- 		Given the user is logged in
-   		When the user clicks the Logout button
-     		Then the user should be redirected to the login page
-       		Then a message should be displayed, saying You have successfully logged out
-	 	Then the session should be terminated
+  Scenario: Successful logout
+    Given the user is logged in
+    When the user clicks the logout button
+    Then the user should be redirected to the login page
+    Then the session token should be invalidated
 
-	Scenario: Scenario 7: Session Expiry
- 		Given the user is logged in
-   		Given the session timeout duration has elapsed
-     		When the user attempts to perform any action
-       		Then the user should be redirected to the login page
-	 	Then a message should be displayed, saying Your session has expired. Please log in again
+  Scenario: Unauthenticated user attempts to access a protected page
+    Given the user is not logged in
+    When the user tries to access the dashboard page
+    Then the user should be redirected to the login page
+
+  Scenario: Password field should mask input
+    Given the user is on the login page
+    When the user types a password
+    Then the password field should display dots or asterisks instead of the actual characters
+
+  Scenario: Session expires after a period of inactivity
+    Given the user is logged in
+    Given the user is inactive for 30 minutes
+    When the user tries to interact with the application
+    Then the user should be redirected to the login page with a message "Session expired"
+
+  Scenario: Prompt user for 2FA after successful credential validation
+    Given the user has enabled two-factor authentication
+    When the user logs in with valid username and password
+    Then the user should be prompted to enter a 2FA code

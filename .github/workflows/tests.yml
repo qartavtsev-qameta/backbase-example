@@ -62,3 +62,4 @@ jobs:
         run: allurectl watch -- npm test
         env:
           ALLURE_LAUNCH_NAME: "Test Run #${{ github.run_number }}"
+          VERSION: ${{ inputs.VERSION }}

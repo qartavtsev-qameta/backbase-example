@@ -17,6 +17,10 @@ on:
       ALLURE_USERNAME:
         description: ALLURE_USERNAME - service parameter (leave blank)
         required: false
+      VERSION:
+        description: "Specify the software version under test"
+        required: true
+        default: "25.1.0"   
 
 jobs:
   autotests:

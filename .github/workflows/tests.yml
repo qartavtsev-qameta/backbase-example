@@ -1,8 +1,8 @@
-name: javascript-cucumber-esm-pnpm
+name: backbase-example
 
 env:
   ALLURE_ENDPOINT: https://demo.testops.cloud/
-  ALLURE_PROJECT_ID: 4160
+  ALLURE_PROJECT_ID: 4370
   ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
   ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
   ALLURE_RESULTS: "./out/allure-results"
@@ -50,7 +50,7 @@ jobs:
         uses: allure-framework/setup-allurectl@v1
         with:
           allure-endpoint: https://demo.testops.cloud/
-          allure-project-id: 4160
+          allure-project-id: 4370
           allure-token: ${{ secrets.ALLURE_TOKEN }}
           allurectl-version: ${{ env.ALLURECTL_VERSION }}
 
